@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Display AI Suggestions and Warnings -->
+{% if messages %}
+<div class="alert alert-warning">
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<h2>Your Recommended Courses</h2>
+<div class="row">
+    {% for course in recommended_courses %}
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p>Category: {{ course.category }}</p>
+                <p>Duration: {{ course.duration }} hours</p>
+                <p>Difficulty: {{ course.difficulty }}</p>
+                <a href="{% url 'remove_from_recommended' course.id %}" class="btn btn-danger">Remove from Recommended</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>All Available Courses</h2>
+<div class="row">
+    {% for course in all_courses %}
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p>Category: {{ course.category }}</p>
+                <p>Duration: {{ course.duration }} hours</p>
+                <p>Difficulty: {{ course.difficulty }}</p>
+                <a href="{% url 'add_to_recommended' course.id %}" class="btn btn-primary">Add to Recommended</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3>Add a New Course</h3>
+<a href="{% url 'add_course' %}" class="btn btn-primary">add a new course</a>
+
+{% endblock %}
+
