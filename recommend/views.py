@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate
 from scipy.optimize import linprog
@@ -30,47 +30,100 @@ def recommend_courses(user_profile):
 @login_required
 def dashboard(request):
     user_profile = UserProfile.objects.get(user=request.user)
-    recommended_courses = recommend_courses(user_profile)
-    all_courses = Course.objects.all()  # Fetch all courses
+    selected_courses = user_profile.selected_courses.all()  # User-selected courses
+    recommended_courses = user_profile.recommended_courses.all()  # User-recommended courses
+    all_courses = Course.objects.all()
     
     return render(request, "dashboard.html", {
         "recommended_courses": recommended_courses,
-        "all_courses": all_courses  # Pass all courses to the template
+        "selected_courses": selected_courses,
+        "all_courses": all_courses
     })
 
-def add_to_recommended(request, course_id):
+
+def add_to_selected(request, course_id):
     user_profile = UserProfile.objects.get(user=request.user)
     course = Course.objects.get(id=course_id)
     
-    # AI-based suggestion logic
-    if course.duration > user_profile.available_time:
-        messages.warning(request, f"{course.title} might be too time-consuming for you. Consider a shorter course.")
-    elif course.difficulty > 3:  # Assuming 3 is the average difficulty
-        messages.warning(request, f"{course.title} is too difficult. Try an easier course.")
-    else:
-        preferences = user_profile.preferences
-        preferences[course.category] = preferences.get(course.category, 1) + 1
-        user_profile.preferences = preferences
+    # Ensure course is not already in selected courses
+    if course not in user_profile.selected_courses.all():
+        user_profile.selected_courses.add(course)
         user_profile.save()
-        messages.success(request, f"{course.title} added successfully!")
+        messages.success(request, f"{course.title} added to Selected Courses!")
+    else:
+        messages.warning(request, f"{course.title} is already in Selected Courses!")
     
     return redirect("dashboard")
+
+
+def add_to_recommended(request, course_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    selected_courses = user_profile.selected_courses.all()
+
+    # AI suggests the best course based on selected ones
+    best_course = recommend_best_course(selected_courses, user_profile)
+
+    if best_course:
+        user_profile.recommended_courses.add(best_course)
+        user_profile.save()
+        messages.success(request, f"{best_course.title} has been added to Recommended Courses based on your selection!")
+    else:
+        messages.warning(request, "No suitable course found for recommendation. Try adding more diverse courses.")
+
+    return redirect("dashboard")
+
+
+
+def remove_from_selected(request, course_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    course = Course.objects.get(id=course_id)
+    
+    if course in user_profile.selected_courses.all():
+        user_profile.selected_courses.remove(course)
+        user_profile.save()
+        messages.info(request, f"{course.title} removed from Selected Courses.")
+    
+    return redirect("dashboard")
+
 
 def remove_from_recommended(request, course_id):
     user_profile = UserProfile.objects.get(user=request.user)
     course = Course.objects.get(id=course_id)
     
-    # Remove course category from user preferences if it exists
-    preferences = user_profile.preferences
-    if course.category in preferences and preferences[course.category] > 0:
-        preferences[course.category] -= 1
-        if preferences[course.category] == 0:
-            del preferences[course.category]
-    user_profile.preferences = preferences
-    user_profile.save()
-    messages.info(request, f"{course.title} has been removed from recommended courses.")
+    if course in user_profile.recommended_courses.all():
+        user_profile.recommended_courses.remove(course)
+        user_profile.save()
+        messages.info(request, f"{course.title} removed from Recommended Courses.")
     
     return redirect("dashboard")
+
+def recommend_best_course(selected_courses, user_profile):
+    """AI-based recommendation allowing cross-category suggestions"""
+    if not selected_courses:
+        return None  # If no courses are selected, return None
+
+    category_counts = {}
+    for course in selected_courses:
+        category_counts[course.category] = category_counts.get(course.category, 0) + 1
+
+    # Find the most frequently chosen category
+    best_category = max(category_counts, key=category_counts.get)
+
+    # First, try recommending from the same category
+    recommended_course = Course.objects.filter(
+        category=best_category
+    ).exclude(id__in=[course.id for course in selected_courses] + [course.id for course in user_profile.recommended_courses.all()]).first()
+
+    # If no course found, try from any category (cross-category recommendation)
+    if not recommended_course:
+        recommended_course = Course.objects.exclude(
+            id__in=[course.id for course in selected_courses] + [course.id for course in user_profile.recommended_courses.all()]
+        ).first()
+
+    return recommended_course  # Returns at least one course or None if no courses exist
+
+
+
 
 def home(request):
     return render(request, "home.html")
@@ -129,3 +182,9 @@ def add_course(request):
     else:
         form = CourseForm()
     return render(request, "add_course.html", {"form": form})
+
+def remove_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    course.delete()
+    messages.info(request, f"{course.title} has been removed from available courses.")
+    return redirect("dashboard")

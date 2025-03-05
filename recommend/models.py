@@ -15,6 +15,8 @@ class UserProfile(models.Model):
     preferences = models.JSONField(default=dict)
     available_time = models.IntegerField(default=10)  # max hours per week
     max_courses = models.IntegerField(default=3)
+    selected_courses = models.ManyToManyField(Course, blank=True)  
+    recommended_courses = models.ManyToManyField(Course, blank=True, related_name="recommended_to_users")  
 
     def __str__(self):
         return self.user.username

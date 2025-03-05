@@ -10,24 +10,7 @@
 </div>
 {% endif %}
 
-<h2>Your Recommended Courses</h2>
-<div class="row">
-    {% for course in recommended_courses %}
-    <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ course.title }}</h5>
-                <p>Category: {{ course.category }}</p>
-                <p>Duration: {{ course.duration }} hours</p>
-                <p>Difficulty: {{ course.difficulty }}</p>
-                <a href="{% url 'remove_from_recommended' course.id %}" class="btn btn-danger">Remove from Recommended</a>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-
-<h2>All Available Courses</h2>
+<h2>Available Courses</h2>
 <div class="row">
     {% for course in all_courses %}
     <div class="col-md-4">
@@ -37,15 +20,55 @@
                 <p>Category: {{ course.category }}</p>
                 <p>Duration: {{ course.duration }} hours</p>
                 <p>Difficulty: {{ course.difficulty }}</p>
-                <a href="{% url 'add_to_recommended' course.id %}" class="btn btn-primary">Add to Recommended</a>
+                <a href="{% url 'add_to_selected' course.id %}" class="btn btn-primary">Add to Selected</a>
+                <a href="{% url 'remove_course' course.id %}" class="btn btn-danger">Remove</a>
             </div>
         </div>
     </div>
+    {% empty %}
+    <p>No available courses.</p>
     {% endfor %}
 </div>
 
+<h2>Selected Courses</h2>
+<div class="row">
+    {% for course in selected_courses %}
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p>Category: {{ course.category }}</p>
+                <p>Duration: {{ course.duration }} hours</p>
+                <p>Difficulty: {{ course.difficulty }}</p>
+                <a href="{% url 'add_to_recommended' course.id %}" class="btn btn-success">Recommend</a>
+                <a href="{% url 'remove_from_selected' course.id %}" class="btn btn-danger">Remove</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No courses selected yet.</p>
+    {% endfor %}
+</div>
+
+<h2>Recommended Courses</h2>
+<div class="row">
+    {% for course in recommended_courses %}
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p>Category: {{ course.category }}</p>
+                <p>Duration: {{ course.duration }} hours</p>
+                <p>Difficulty: {{ course.difficulty }}</p>
+                <a href="{% url 'remove_from_recommended' course.id %}" class="btn btn-danger">Remove</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No recommended courses yet.</p>
+    {% endfor %}
+</div>
 <h3>Add a New Course</h3>
 <a href="{% url 'add_course' %}" class="btn btn-primary">add a new course</a>
 
 {% endblock %}
-
