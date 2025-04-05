@@ -15,4 +15,9 @@ urlpatterns = [
     path("remove-from-recommended/<int:course_id>/", views.remove_from_recommended, name="remove_from_recommended"),  # Add this line
     path("add_to_selected/<int:course_id>/", views.add_to_selected, name="add_to_selected"),
     path("remove_from_selected/<int:course_id>/", views.remove_from_selected, name="remove_from_selected"),
+    path("mark_as_completed/<int:course_id>/", views.mark_as_completed, name="mark_as_completed"),
+    path("remove_from_completed/<int:course_id>/", views.remove_from_completed, name="remove_from_completed"),
+    path("check-badges/", views.check_badges, name="check_badges"),
+    path('engineering-courses/', views.engineering_courses, name='engineering_courses'),
+
 ]

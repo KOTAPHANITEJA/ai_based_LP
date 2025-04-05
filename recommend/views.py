@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate
 from scipy.optimize import linprog
 from .models import Course, UserProfile
-from .forms import UserRegistrationForm, UserProfileForm
+from .forms import UserRegistrationForm, UserProfileForm,UserRegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
@@ -30,15 +30,27 @@ def recommend_courses(user_profile):
 @login_required
 def dashboard(request):
     user_profile = UserProfile.objects.get(user=request.user)
-    selected_courses = user_profile.selected_courses.all()  # User-selected courses
-    recommended_courses = user_profile.recommended_courses.all()  # User-recommended courses
-    all_courses = Course.objects.all()
+    completed_count = user_profile.completed_courses.count()
     
-    return render(request, "dashboard.html", {
-        "recommended_courses": recommended_courses,
-        "selected_courses": selected_courses,
-        "all_courses": all_courses
-    })
+    # Calculate badge progress
+    first_course_progress = min(completed_count * 100, 100)  # 1 course needed
+    learning_streak_progress = min(completed_count * 50, 100)  # 2 courses needed
+    
+    # Get top users for leaderboard
+    top_users = UserProfile.objects.order_by('-points')[:10]
+    
+    context = {
+        'user_profile': user_profile,
+        'selected_courses': user_profile.selected_courses.all(),
+        'recommended_courses': user_profile.recommended_courses.all(),
+        'completed_courses': user_profile.completed_courses.all(),
+        'all_courses': Course.objects.filter(is_removed=False),
+        'first_course_progress': first_course_progress,
+        'learning_streak_progress': learning_streak_progress,
+        'top_users': top_users,
+    }
+    
+    return render(request, "dashboard.html", context)
 
 
 def add_to_selected(request, course_id):
@@ -147,17 +159,17 @@ def logout_view(request):
     return redirect('login')
 
 def register(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.set_password(user.password)
-            user.save()
+            # Create UserProfile for the new user
+            
             login(request, user)
-            return redirect("dashboard")
+            return redirect('dashboard')
     else:
         form = UserRegistrationForm()
-    return render(request, "register.html", {"form": form})
+    return render(request, 'register.html', {'form': form})
 
 @login_required
 def profile_settings(request):
@@ -188,3 +200,63 @@ def remove_course(request, course_id):
     course.delete()
     messages.info(request, f"{course.title} has been removed from available courses.")
     return redirect("dashboard")
+
+
+def mark_as_completed(request, course_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    course = get_object_or_404(Course, id=course_id)
+    
+    # Remove from selected or recommended if present
+    if course in user_profile.selected_courses.all():
+        user_profile.selected_courses.remove(course)
+    if course in user_profile.recommended_courses.all():
+        user_profile.recommended_courses.remove(course)
+    
+    # Add to completed courses
+    user_profile.completed_courses.add(course)
+    user_profile.save()
+
+     # Award points based on course difficulty
+    points_to_award = course.difficulty * 100  # Example: harder courses = more points
+    user_profile.award_points(points_to_award)
+    messages.success(request, f"Congratulations! You've completed {course.title} and earned {points_to_award} points!!")
+    return redirect("dashboard")
+
+
+def remove_from_completed(request, course_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    course = get_object_or_404(Course, id=course_id)
+    
+    if course in user_profile.completed_courses.all():
+        user_profile.completed_courses.remove(course)
+        user_profile.save()
+        messages.info(request, f"{course.title} removed from Completed Courses.")
+    
+    return redirect("dashboard")
+
+@login_required
+def check_badges(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    initial_badge_count = user_profile.badges.count()
+    user_profile.check_badges()
+    final_badge_count = user_profile.badges.count()
+    
+    if final_badge_count > initial_badge_count:
+        new_badge = user_profile.badges.last()
+        messages.success(request, f"Congratulations! You've earned new badges! Current points: {user_profile.points}")
+        return render(request, 'dashboard.html', {
+            'new_badge': new_badge,
+            'user_profile': user_profile
+        })
+    else:
+        messages.info(request, f"Current points: {user_profile.points} - Complete more courses to earn badges!")
+        return redirect("dashboard")
+    
+    
+def engineering_courses(request):
+    return render(request, 'engineering_courses.html')
+
+#points system:
+#Easy course (difficulty 1) = 100 points
+#Medium course (difficulty 2) = 200 points
+#Hard course (difficulty 3) = 300 points

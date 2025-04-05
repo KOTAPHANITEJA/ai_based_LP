@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center mb-5">Engineering Disciplines & Courses</h1>
+
+    <!-- Engineering Categories -->
+    <div class="row">
+        <!-- Computer Science & IT -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">Computer Science & IT</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Data Structures & Algorithms</li>
+                        <li>Database Management Systems</li>
+                        <li>Operating Systems</li>
+                        <li>Computer Networks</li>
+                        <li>Web Development</li>
+                        <li>Machine Learning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Electrical Engineering -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title">Electrical Engineering</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Circuit Analysis</li>
+                        <li>Digital Electronics</li>
+                        <li>Power Systems</li>
+                        <li>Control Systems</li>
+                        <li>Microprocessors</li>
+                        <li>Signal Processing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mechanical Engineering -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="card-title">Mechanical Engineering</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Thermodynamics</li>
+                        <li>Machine Design</li>
+                        <li>Fluid Mechanics</li>
+                        <li>Heat Transfer</li>
+                        <li>Manufacturing Processes</li>
+                        <li>CAD/CAM</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Civil Engineering -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title">Civil Engineering</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Structural Engineering</li>
+                        <li>Geotechnical Engineering</li>
+                        <li>Transportation Engineering</li>
+                        <li>Environmental Engineering</li>
+                        <li>Construction Management</li>
+                        <li>Surveying</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chemical Engineering -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h3 class="card-title">Chemical Engineering</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Process Engineering</li>
+                        <li>Chemical Reaction Engineering</li>
+                        <li>Mass Transfer</li>
+                        <li>Chemical Plant Design</li>
+                        <li>Process Control</li>
+                        <li>Safety Engineering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Electronics Engineering -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="card-title">Electronics Engineering</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Semiconductor Devices</li>
+                        <li>Analog Electronics</li>
+                        <li>Digital System Design</li>
+                        <li>VLSI Design</li>
+                        <li>Embedded Systems</li>
+                        <li>Communication Systems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- AI and Machine Learning -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-purple text-white" style="background-color: #6f42c1;">
+                    <h3 class="card-title">AI & Machine Learning</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Deep Learning Fundamentals</li>
+                        <li>Natural Language Processing</li>
+                        <li>Computer Vision</li>
+                        <li>Reinforcement Learning</li>
+                        <li>Neural Networks</li>
+                        <li>AI Ethics & Governance</li>
+                        <li>Big Data Analytics</li>
+                        <li>Robotics & AI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<!-- Call to Action -->
+<div class="text-center mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4 class="card-title">Ready to Start Your Learning Journey?</h4>
+                    <p class="card-text">Join our platform to get personalized course recommendations and track your progress!</p>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Start Learning Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
