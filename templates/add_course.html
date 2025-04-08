@@ -1,11 +1,144 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h2>Add a New Course</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Add Course</button>
-    </form>
+<style>
+    .add-course-container {
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+                    url('/static/images/course_bg.jpg');
+        background-size: cover;
+        background-position: center;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .course-form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 2rem auto;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    .dark-mode .course-form-card {
+        background: #2d2d2d;
+        color: white;
+    }
+
+    .form-title {
+        color: #007bff;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .form-group:hover {
+        transform: translateY(-2px);
+    }
+
+    .form-group label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 2rem auto 0;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Error messages styling */
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+    }
+
+    /* Success message styling */
+    .alert-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="add-course-container">
+    <div class="course-form-card">
+        <h2 class="form-title">Add a New Course</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="post" class="course-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field.errors }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success">Add Course</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

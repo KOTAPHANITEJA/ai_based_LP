@@ -1,14 +1,123 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2>Register</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+<style>
+    .register-container {
+        min-height: 100vh;
+        
+        background-position: center;
+        padding: 2rem;
+    }
+
+    .register-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.5s ease-out;
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .dark-mode .register-card {
+        background: rgba(33, 33, 33, 0.9);
+        color: white;
+    }
+
+    .register-title {
+        color: #28a745;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .form-group:hover {
+        transform: translateY(-2px);
+    }
+
+    .form-control {
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 50px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #28a745;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-register:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+        animation-delay: 0.5s;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="register-container d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="register-card">
+                    <h2 class="register-title">Create Account</h2>
+                    <form method="post" class="register-form">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field.errors }}
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-register">Register</button>
+                    </form>
+                    <div class="login-link">
+                        <p>Already have an account? <a href="{% url 'login' %}" class="text-success">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

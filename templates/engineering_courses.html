@@ -1,8 +1,169 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                    url('/static/images/engineering_bg.jpg');
+        background-size: cover;
+        background-position: center;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        color: white;
+        text-align: center;
+        animation: fadeIn 1s ease-out;
+    }
 
-<div class="container">
-    <h1 class="text-center mb-5">Engineering Disciplines & Courses</h1>
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        opacity: 0;
+        animation: slideUp 0.5s ease-out forwards;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .card-header {
+        border: none;
+        padding: 1.5rem;
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .list-unstyled li {
+        padding: 0.8rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .list-unstyled li:last-child {
+        border-bottom: none;
+    }
+
+    .list-unstyled li:hover {
+        transform: translateX(10px);
+        color: #007bff;
+    }
+
+    /* Card Header Colors with Gradients */
+    .bg-primary {
+        background: linear-gradient(45deg, #007bff, #00c6ff) !important;
+    }
+
+    .bg-success {
+        background: linear-gradient(45deg, #28a745, #20c997) !important;
+    }
+
+    .bg-warning {
+        background: linear-gradient(45deg, #ffc107, #ffac33) !important;
+    }
+
+    .bg-danger {
+        background: linear-gradient(45deg, #dc3545, #ff6b6b) !important;
+    }
+
+    .bg-info {
+        background: linear-gradient(45deg, #17a2b8, #0cd1e8) !important;
+    }
+
+    .bg-secondary {
+        background: linear-gradient(45deg, #6c757d, #868e96) !important;
+    }
+
+    .bg-purple {
+        background: linear-gradient(45deg, #6f42c1, #8e44ad) !important;
+    }
+
+    /* Call to Action Section */
+    .cta-section {
+        background: linear-gradient(45deg, #007bff, #00c6ff);
+        padding: 3rem 0;
+        margin-top: 4rem;
+        border-radius: 15px;
+        color: white;
+        transform: translateY(20px);
+        animation: slideUp 0.5s ease-out forwards;
+        animation-delay: 0.5s;
+    }
+
+    .cta-section .btn-primary {
+        background: white;
+        color: #007bff;
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .cta-section .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Staggered card animations */
+    .col-md-4:nth-child(1) .card { animation-delay: 0.1s; }
+    .col-md-4:nth-child(2) .card { animation-delay: 0.2s; }
+    .col-md-4:nth-child(3) .card { animation-delay: 0.3s; }
+    .col-md-4:nth-child(4) .card { animation-delay: 0.4s; }
+    .col-md-4:nth-child(5) .card { animation-delay: 0.5s; }
+    .col-md-4:nth-child(6) .card { animation-delay: 0.6s; }
+    .col-md-4:nth-child(7) .card { animation-delay: 0.7s; }
+
+    /* Dark mode support */
+    .dark-mode .card {
+        background: #2d2d2d;
+        color: white;
+    }
+
+    .dark-mode .list-unstyled li {
+        border-bottom-color: rgba(255,255,255,0.1);
+    }
+
+    .dark-mode .list-unstyled li:hover {
+        color: #5c9eff;
+    }
+</style>
+
+<!-- Add page header -->
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-4">Engineering Disciplines & Courses</h1>
+        <p class="lead">Explore our comprehensive collection of engineering courses</p>
+    </div>
+</div>
+<!-- ...existing cards... -->
+
+
 
     <!-- Engineering Categories -->
     <div class="row">
@@ -145,18 +306,16 @@
 </div>
 
 <!-- Call to Action -->
-<div class="text-center mt-4 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h4 class="card-title">Ready to Start Your Learning Journey?</h4>
-                    <p class="card-text">Join our platform to get personalized course recommendations and track your progress!</p>
-                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Start Learning Now</a>
-                </div>
+
+<div class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2>Ready to Start Your Learning Journey?</h2>
+                <p class="lead">Join our platform to get personalized course recommendations and track your progress!</p>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Start Learning Now</a>
             </div>
         </div>
     </div>
-</div>
 </div>
 {% endblock %}

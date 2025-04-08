@@ -1,8 +1,135 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="text-center">
-    <h1>Welcome to AI Course Recommender</h1>
-    <p>Find the best courses tailored for you using AI optimization!</p>
-    <a href="{% url 'login' %}" class="btn btn-primary">Get Started</a>
+<style>
+    .hero-section {
+        min-height: 100vh;
+        /* Reduced opacity of the overlay for more brightness */
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                    url('/static/images/home_background.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-description {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .cta-button {
+        display: inline-block;
+        padding: 1rem 2.5rem;
+        font-size: 1.2rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    .cta-button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .features {
+        padding: 4rem 0;
+        background-color: var(--bg-color, #f8f9fa);
+        transition: background-color 0.3s ease;
+    }
+
+    .feature-card {
+        padding: 2rem;
+        text-align: center;
+        background: var(--card-bg, white);
+        color: var(--text-color, inherit);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    /* Dark mode styles */
+    .dark-mode .features {
+        --bg-color: #1a1a1a;
+    }
+
+    .dark-mode .feature-card {
+        --card-bg: #2d2d2d;
+        --text-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    .dark-mode .feature-card p {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .dark-mode .text-primary {
+        color: #5c9eff !important;
+    }
+</style>
+
+<!-- ...rest of your existing HTML... -->
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to AI Course Recommender</h1>
+        <p class="hero-description">Find the best courses tailored for you using AI optimization!</p>
+        <a href="{% url 'login' %}" class="cta-button">Get Started</a>
+    </div>
+</div>
+
+<div class="features container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-brain fa-3x mb-3 text-primary"></i>
+                <h3>AI-Powered</h3>
+                <p>Smart course recommendations based on your preferences and goals.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
+                <h3>Track Progress</h3>
+                <p>Monitor your learning journey with detailed progress tracking.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-award fa-3x mb-3 text-primary"></i>
+                <h3>Earn Badges</h3>
+                <p>Get rewarded with badges as you complete courses and achieve milestones.</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
